@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SensorApp</string>
+    <string-array name = "gender_array">
+        <item> Female </item>
+        <item> Male </item>
+    </string-array>
+</resources>
