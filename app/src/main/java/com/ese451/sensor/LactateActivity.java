@@ -56,25 +56,6 @@ public class LactateActivity extends AppCompatActivity {
 
     }
 
-//    private void getRequest() {
-//        RequestQueue queue = Volley.newRequestQueue((LactateActivity.this));
-//        String url = "http://127.0.0.1:9000/api";
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//            },
-//            new Response.ErrorListener() {
-//                @Override
-//                public void onErrorReponse(VolleyError error) {
-//
-//            }
-//        });
-//        queue.add(stringRequest);
-//
-//
-//    }
-
 
     private void postRequest() {
         Map<String, String> params = new HashMap<String, String>();
@@ -87,13 +68,14 @@ public class LactateActivity extends AppCompatActivity {
         params.put("HeartRate", heartRate + "");
 
         RequestQueue requestQueue = Volley.newRequestQueue(LactateActivity.this);
-        String url = "http://127.0.0.1:9000/api"; // local host
+        String url = "http://10.0.2.2:9000/api"; // local host
         JsonObjectRequest objectRequest = new JsonObjectRequest(
                 Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>(){
             TextView tv = (TextView) findViewById(R.id.lactateText);
             @Override
             public void onResponse(JSONObject response) {
-                Log.e("response", response.toString());
+                Log.v("response", response.toString());
+                tv.setText(response.toString());
 
             }
             }, new Response.ErrorListener() {
