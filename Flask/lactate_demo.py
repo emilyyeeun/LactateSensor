@@ -28,12 +28,12 @@ def return_hello():
 def predict_lactate():
     """
     @param: json: {
-        'age': <INT>, 
+        'age': <INT> (years), 
         'gender': <STRING> ('male' or 'female'), 
-        'height': <DOUBLE> (in meters?),`
-        'glucose': <DOUBLE> (units?),
-        'weight': <DOUBLE> (in kg?),
-        'sp02': <DOUBLE> (units?),
+        'height': <DOUBLE> (inches),`
+        'glucose': <DOUBLE> (mg/dL),
+        'weight': <DOUBLE> (lbs),
+        'sp02': <DOUBLE> (%),
         'heart_rate': <DOUBLE> (bpm) }
 
     """
