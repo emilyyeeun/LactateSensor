@@ -7,7 +7,7 @@
 # Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-# get_ipython().run_line_magic('matplotlib', 'inline')
+get_ipython().run_line_magic('matplotlib', 'inline')
 plt.style.use('ggplot')
 from sklearn import preprocessing
 from sklearn import linear_model
@@ -30,40 +30,30 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 
-patients = pd.read_csv('./patients.csv')
+patients = pd.read_csv('/Users/nadeenmaayeh/Downloads/patients.csv')
 
-
-# ### Creating Model
 
 # In[3]:
 
 
-test = patients[patients.Glucose <= (7.6*18)]
-test = test[test.Glucose > (7.0*18)]
-test1 = test[test.Lactate <= 1.7]
-test2 = test[test.Lactate > 2.3]
-patients.drop(test1.index, inplace=True)
-patients.drop(test2.index, inplace=True)
+patients.head()
 
 
 # In[4]:
 
 
-test = patients[patients.Glucose <= (8.2*18)]
-test = test[test.Glucose > (7.6*18)]
-test1 = test[test.Lactate <= 1.3]
-test2 = test[test.Lactate > 1.7]
-patients.drop(test1.index, inplace=True)
-patients.drop(test2.index, inplace=True)
+plt.scatter(patients['Glucose'], patients['Lactate'])
 
+
+# ### Creating Model
 
 # In[5]:
 
 
-test = patients[patients.Glucose <= (9.0*18)]
-test = test[test.Glucose > (8.2*18)]
-test1 = test[test.Lactate <= 1]
-test2 = test[test.Lactate > 1.3]
+test = patients[patients.Glucose <= (7.6*18)]
+test = test[test.Glucose > (7.0*18)]
+test1 = test[test.Lactate <= 1.8]
+test2 = test[test.Lactate > 2.4]
 patients.drop(test1.index, inplace=True)
 patients.drop(test2.index, inplace=True)
 
@@ -71,67 +61,89 @@ patients.drop(test2.index, inplace=True)
 # In[6]:
 
 
-test = patients[patients.Glucose > (9.0*18)]
-test1 = test[test.Lactate > 1]
+test = patients[patients.Glucose <= (8.2*18)]
+test = test[test.Glucose > (7.6*18)]
+test1 = test[test.Lactate <= 1.4]
+test2 = test[test.Lactate > 1.8]
 patients.drop(test1.index, inplace=True)
+patients.drop(test2.index, inplace=True)
 
 
 # In[7]:
 
 
-test = patients[patients.Glucose <= (7.0*18)]
-test1 = test[test.Lactate <= 2.3]
+test = patients[patients.Glucose <= (9.0*18)]
+test = test[test.Glucose > (8.2*18)]
+test1 = test[test.Lactate <= 1.1]
+test2 = test[test.Lactate > 1.4]
 patients.drop(test1.index, inplace=True)
+patients.drop(test2.index, inplace=True)
 
 
 # In[8]:
+
+
+test = patients[patients.Glucose > (9.0*18)]
+test1 = test[test.Lactate > 1.1]
+patients.drop(test1.index, inplace=True)
+
+
+# In[9]:
+
+
+test = patients[patients.Glucose <= (7.0*18)]
+test1 = test[test.Lactate <= 2.4]
+patients.drop(test1.index, inplace=True)
+
+
+# In[10]:
 
 
 encode = lambda x: 1 if x <= (7.0*18) else 0
 patients['G_Range1'] = patients['Glucose'].map(encode)
 
 
-# In[9]:
-
-
-encode = lambda x: 1 if x <= (7.6*18) else (1 if x > (7.0*18) else 0)
-patients['G_Range2'] = patients['Glucose'].map(encode)
-
-
-# In[10]:
-
-
-encode = lambda x: 1 if x <= (8.2*18) else (1 if x > (7.6*18) else 0)
-patients['G_Range3'] = patients['Glucose'].map(encode)
-
-
 # In[11]:
 
 
-encode = lambda x: 1 if x <= (9.0*18) else (1 if x > (8.2*18) else 0)
-patients['G_Range4'] = patients['Glucose'].map(encode)
+encode = lambda x: 1 if (7.0*18) < x <= (7.6*18) else 0
+patients['G_Range2'] = patients['Glucose'].map(encode)
 
 
 # In[12]:
+
+
+encode = lambda x: 1 if (7.6*18) < x <= (8.2*18) else 0
+patients['G_Range3'] = patients['Glucose'].map(encode)
+
+
+# In[13]:
+
+
+encode = lambda x: 1 if (8.2*18) < x <= (9.0*18) else 0
+patients['G_Range4'] = patients['Glucose'].map(encode)
+
+
+# In[14]:
 
 
 encode = lambda x: 1 if x > (9.0*18) else 0
 patients['G_Range5'] = patients['Glucose'].map(encode)
 
 
-# In[13]:
+# In[15]:
 
 
 encode = lambda x: 1 if x<=1.0 else (2 if (x<=1.3 and x>1.0) else (3 if (x>1.3 and x<=1.7) else (4 if (x>1.7 and x<=2.3) else 5)))
 
 
-# In[14]:
+# In[16]:
 
 
 patients['Lactate_Ranges'] = patients['Lactate'].map(encode)
 
 
-# In[15]:
+# In[18]:
 
 
 y = patients['Lactate_Ranges']
@@ -141,8 +153,7 @@ X_train = X[:train_end]
 X_test = X[train_end:]
 y_train_copy = y[:train_end]
 y_test_copy = y[train_end:]
-from sklearn import preprocessing
-scaler = preprocessing.MinMaxScaler()
+scaler = preprocessing.StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 logregr = LogisticRegression().fit(X_train, y_train_copy)
@@ -162,7 +173,7 @@ plt.legend(labels = ('Actual', 'Prediced'))
 
 # ### Function to Predict Lactate Level
 
-# In[16]:
+# In[19]:
 
 
 def predict_lactate(gender, age, height, weight, spO2, heartrate, glucose):
@@ -193,8 +204,8 @@ def predict_lactate(gender, age, height, weight, spO2, heartrate, glucose):
         return '> 2.3'
 
 
-# In[17]:
+# In[20]:
 
 
-predict_lactate('Female', 22, 65, 123.5, 97, 80, 90)
+predict_lactate('Female', 22, 62.6, 121.3, 97, 80.0, 95.0)
 
