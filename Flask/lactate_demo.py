@@ -29,7 +29,7 @@ def predict_lactate():
     """
     @param: json: {
         'age': <INT> (years), 
-        'gender': <STRING> ('male' or 'female'), 
+        'gender': <STRING> ('Male' or 'Female'), 
         'height': <DOUBLE> (inches),`
         'glucose': <DOUBLE> (mg/dL),
         'weight': <DOUBLE> (lbs),
