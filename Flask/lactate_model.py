@@ -7,7 +7,7 @@
 # Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 plt.style.use('ggplot')
 from sklearn import preprocessing
 from sklearn import linear_model
@@ -30,7 +30,7 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 
-patients = pd.read_csv('/Users/nadeenmaayeh/Downloads/patients.csv')
+patients = pd.read_csv('./patients.csv')
 
 
 # In[3]:
