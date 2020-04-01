@@ -1,8 +1,10 @@
 import numpy as np
 from flask import Flask, abort, jsonify, request
-import pickle as pickle
+# import pickle as pickle
 
-model = pickle.load(open("lactate_model.pkl", "rb"))
+from lactate_model import predict_lactate as model_predict
+
+# model = pickle.load(open("lactate_model.pkl", "rb"))
 
 app = Flask(__name__)
 
@@ -21,6 +23,35 @@ def make_predict():
 @app.route('/hello', methods=['POST'])
 def return_hello():
     return jsonify(result = "hello")
+
+@app.route('/predict_lactate', methods=['POST'])
+def predict_lactate():
+    """
+    @param: json: {
+        'age': <INT>, 
+        'gender': <STRING> ('male' or 'female'), 
+        'height': <DOUBLE> (in meters?),`
+        'glucose': <DOUBLE> (units?),
+        'weight': <DOUBLE> (in kg?),
+        'sp02': <DOUBLE> (units?),
+        'heart_rate': <DOUBLE> (bpm) }
+
+    """
+    lactate_params = request.get_json(force=True)
+
+    age = lactate_params.get('age')
+    gender = lactate_params.get('gender')
+    height = lactate_params.get('height')
+    glucose = lactate_params.get('glucose')
+    weight = lactate_params.get('weight')
+    sp02 = lactate_params.get('sp02')
+    heart_rate = lactate_params.get('heart_rate')
+
+    predicted_lactate = model_predict(
+        gender, age, height, weight, sp02, heart_rate, glucose)
+    
+    return jsonify({'predicted_lactate': predicted_lactate})
+
 
 if __name__ == '__main__':
     app.run(port=9000, debug=True)
